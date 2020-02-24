@@ -1,0 +1,13 @@
+BuildVersion - 1.0
+-Optimise the voice recogination method.
+-Write an logic to show always standard time rather than military time
+-Added commands support like :- Hello,what time is it ? , which day is today
+-Added sample rate and chunk support to get more clear audio and convert it into string at a time 
+-Added new commands support like next month,previous month,curent month
+-Remove unnecessary code 
+-Update the code to Optimise the user input voice and give result faster  
+-Added new commands support like 'Show of me the calender of 2019'
+-Removed voice of saying listening and searching(for now)
+-Added Mathametical command operation support like i.e Calculate 2+2,2-2
+-Added support of getting info in wikipedia ,just say like 'Wikipedia of Any celebrity name'.
+-Added new  support of opening any url into browser,cool right just say like open youtube  
