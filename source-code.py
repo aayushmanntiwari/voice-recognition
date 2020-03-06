@@ -1,6 +1,6 @@
 '''Prerequest:-
 1.Make sure latest Microsoft Visual C++ Build Tools is installed in your pc.  (link:-https://go.microsoft.com/fwlink/?LinkId=691126)
-2.Please run  this comment as well:-pip install port audio
+2.Please run  this command  as well:-pip install port audio
 '''
 #All imported packages  are below
 import  pyttsx3 #Important:-Always install this  package through this command to avoid errors - pip install -Iv pyttsx3==2.6 -U
@@ -10,13 +10,18 @@ import speech_recognition as sr  #pip install SpeechRecognition
 import pyaudio  #(For microphone user) pip install PyAudio-0.2.11-cp38-cp38-win_amd64.whl (link to download .whl file :- https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio)
 import wikipedia
 import webbrowser
-
+import sysconfig
+import os
+import glob
+import requests
 
 
 #Coding start from here
-engine = pyttsx3.init("sapi5") #pyttsx is used to convert text-to-speech
-voice = engine.getProperty('voices')
-engine.setProperty('voice',voice[1].id)    # 1 for female voice and 0 of male voice
+operating_system = sysconfig.get_platform().split("-")
+if operating_system[0] == 'win':
+    engine = pyttsx3.init("sapi5") #pyttsx is used to convert text-to-speech
+    voice = engine.getProperty('voices')
+    engine.setProperty('voice',voice[1].id)    # 1 for female voice and 0 of male voice
 
 
 def months(audio):
@@ -84,9 +89,14 @@ def time():
         "24":12
     }
     time = str(datetime.datetime.now().time())
+    hour = int(datetime.datetime.now().hour)
+    if hour<12:
+        value = 'AM'
+    else:
+        value = 'PM'
     standard_time = time.split(":")
-    print(f"It's {formate_to_standard.get(standard_time[0])} {standard_time[1]}")
-    engine.say(f"It's {formate_to_standard.get(standard_time[0])} {standard_time[1]}")
+    print(f"It's {formate_to_standard.get(standard_time[0])}{standard_time[1]} {value}")
+    engine.say(f"It's {formate_to_standard.get(standard_time[0])}{standard_time[1]} {value}")
     engine.runAndWait()
     listen()
 
@@ -94,22 +104,25 @@ def time():
 def hello():
     hour = int(datetime.datetime.now().hour)
     if hour < 12:
-       print(f"Hello I'm Ahaana\nGood Morning\n"
-             f"how may help you?")
-       engine.say(f"Hello,Good Morning"
-                  f"how ,may help you")
-       engine.runAndWait()
-       listen()
-    elif hour>=12 or hour <= 20:
-         print(f"Hello I'm Ahaana \n Good Afternoon\n"
-                 f"how may help you?")
-         engine.say(f"Hello I'm Ahaana,Good Afternoon"
-               f"how may help you?")
-         engine.runAndWait()
-         listen()
-    elif hour > 20:
-        print(f'Good Night')
-        engine.say('Good Night')
+        print(f"Hello\nGood Morning\n"
+              f"how may help you?")
+        engine.say(f"Hello,Good Morning"
+                   f"how ,may help you")
+        engine.runAndWait()
+        listen()
+    elif hour>=12 or hour <= 17:
+        print(f"Hello\nGood Afternoon\n"
+              f"how may help you?")
+        engine.say(f"Hello Good Afternoon"
+                   f"how may help you?")
+        engine.runAndWait()
+        listen()
+    elif hour > 17:
+        print(f'Hello Good Evening')
+        print(f"Hello\nGood Evening\n"
+              f"how may help you?")
+        engine.say(f"Hello Good Afternoon"
+                   f"how may help you?")
         engine.runAndWait()
         listen()
 
@@ -164,11 +177,11 @@ def operation(audio):
     x = Calculation(int(values[1]))
     y = Calculation(int(values[3]))
     if symbol == '+':
-       result = x + y
-       print(result)
-       engine.say(result)
-       engine.runAndWait()
-       listen()
+        result = x + y
+        print(result)
+        engine.say(result)
+        engine.runAndWait()
+        listen()
     elif symbol == '-':
         result = x - y
         print(result)
@@ -176,11 +189,11 @@ def operation(audio):
         engine.runAndWait()
         listen()
     elif symbol == '*':
-       result = x * y
-       print(result)
-       engine.say(result)
-       engine.runAndWait()
-       listen()
+        result = x * y
+        print(result)
+        engine.say(result)
+        engine.runAndWait()
+        listen()
     elif symbol == '/':
         x = int(values[1])
         y = int(values[3])
@@ -190,10 +203,10 @@ def operation(audio):
         engine.runAndWait()
         listen()
     else:
-       print('Wrong Input')
-       engine.say('Wrong Input')
-       engine.runAndWait()
-       listen()
+        print('Wrong Input')
+        engine.say('Wrong Input')
+        engine.runAndWait()
+        listen()
 
 
 def wiki(audio):
@@ -225,23 +238,104 @@ def window(audio):
         engine.runAndWait()
 
 
+
+
+def weather(audio):
+    values = audio.split(' ')
+    city = values[-1].lower()
+    key = ''  #Put you api key here into the string
+    if key:
+        url = f'http://api.openweathermap.org/data/2.5/weather?appid={key}&q={city}'
+        data = requests.get(url).json()
+        weather = data['weather'][0]['main']
+        temp_in_kelvin = data['main']['temp']
+        tem_in_celius = float(temp_in_kelvin) - 273.15
+        wind = data['wind']['speed']
+
+        print(f'Currently in {city} weather is {weather}')
+        engine.say(f'Currently in {city} weather is {weather}')
+        engine.runAndWait()
+        print(f'Currently in {city} tempeature is {round(tem_in_celius)} in celsius')
+        engine.say(f'Currently in {city} tempeature is {round(tem_in_celius)} in celsius')
+        engine.runAndWait()
+        print(f'Currently in {city} speed of wind is  {round(wind*1.609344)} km/h')
+        engine.say(f'Currently in {city} speed of wind is  {round(wind*1.609344)} km/h')
+        engine.runAndWait()
+    else:
+        print('''
+Disclaimer:-Generally  to avoid  security issue it is always a good pratice not to put 
+your own  key online directly ,to get your own key please follow the steps :-
+1.Go to https://openweathermap.org/
+2.Sign up for a free user account
+3.go to API Tab and get your free apis for free or you can choose the subscriptions plan 
+4.once all the above steps are done ,put your key into key.py file .
+        ''')
+        print('Do you want me to redirect to the page url? say Yes or No')
+
+
+
+
+
+
+def changevoice(audio):
+    value = audio.split(' ')[-1]
+    if value == 'male':
+        engine.setProperty('voice',voice[0].id)
+        print('Changed has been done sucessfully')
+        engine.say('Changed has been done sucessfully')
+        engine.runAndWait()
+        listen()
+    else:
+        engine.setProperty('voice',voice[1].id)
+        print('Changed has been done sucessfully')
+        engine.say('Changed has been done sucessfully')
+        engine.runAndWait()
+        listen()
+
+
 def speak(audio):
     if 'month' in audio:
         months(audio)
+
     elif 'time' in audio:
         time()
+
     elif 'hello' in audio:
         hello()
+
     elif 'calendar' in audio:
-         callendar(audio)
+        callendar(audio)
+
     elif 'calculate' in audio:
         operation(audio)
+
     elif 'Wikipedia' in audio:
         wiki(audio)
+
     elif 'date' in audio:
         date(audio)
+
+    elif 'change voice to' in audio:
+        changevoice(audio)
+
+
+    elif "what's the weather like in" in audio:
+        weather(audio)
+
+    elif audio in ["how are you"]:
+        print("I'm Good, \n how may I help you ")
+        engine.say("I'm Good,\n How may I help you")
+        engine.runAndWait()
+        listen()
+
     elif 'open' in audio:
         window(audio)
+
+    elif audio in ['bye','tata']:
+        print('Byee !')
+        engine.say('Bye')
+        engine.runAndWait()
+
     else:
         print(audio)
         engine.say(audio)
@@ -261,8 +355,6 @@ def listen():
     try:
         #Now with this code the  audio will be process with the help of google recognize function then we call speak method
         print('Searching...')
-        #speak('searching...')
-        #engine.runAndWait()
         value = r.recognize_google(audio,language="en-in") #this method  will convert audio into text ,internet connection is requires
         speak(value)
     except:
