@@ -1,6 +1,7 @@
 '''Prerequest:-
 1.Make sure latest Microsoft Visual C++ Build Tools is installed in your pc.  (link:-https://go.microsoft.com/fwlink/?LinkId=691126)
 2.Please run  this command  as well:-pip install port audio
+3.To get weather feature work ,you have to create your own  api key from here 'https://openweathermap.org/api'
 '''
 #All imported packages  are below
 import  pyttsx3 #Important:-Always install this  package through this command to avoid errors - pip install -Iv pyttsx3==2.6 -U
