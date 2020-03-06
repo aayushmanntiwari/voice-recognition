@@ -243,7 +243,7 @@ def window(audio):
 def weather(audio):
     values = audio.split(' ')
     city = values[-1].lower()
-    key = ''  #Put you api key here into the string
+    key = ''  #Put your api key here into the string
     if key:
         url = f'http://api.openweathermap.org/data/2.5/weather?appid={key}&q={city}'
         data = requests.get(url).json()
