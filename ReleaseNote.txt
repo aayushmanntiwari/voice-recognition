@@ -13,7 +13,6 @@ BuildVersion - 1.0
 -Added new  support of opening any url into browser,cool right just say like open youtube  
 
 
-
 Buildversion - 1.5 (New Changelog)
 -Added command like saying byee or tata will exit the recognizer.
 -Added new command support to get wheather info just say 'What's the weather like in CityName'
